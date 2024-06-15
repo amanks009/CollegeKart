@@ -27,6 +27,10 @@ function ProductDetail(){
         
     },[])
 
+    const handleContact= (addedBy)=>{
+
+    }
+
     return (
         <>
         <Header/>
@@ -35,7 +39,8 @@ function ProductDetail(){
             { product && 
                 <div className="d-flex justify-content-between flex-wrap">
                     <div>
-                        <img width="500px" height="300px" src={ 'http://localhost:4000/' + product.pimage} alt=""/>
+                        <img width="400px" height="200px" src={ 'http://localhost:4000/' + product.pimage} alt=""/>
+                        <img width="400px" height="200px" src={ 'http://localhost:4000/' + product.pimage2} alt=""/>
                         <h6>Product Details:</h6>
                         {product.pdesc}
                     </div>
@@ -43,6 +48,12 @@ function ProductDetail(){
                         <h3 className="m-2 price-text">Rs. {product.price} /-</h3>
                         <p className="m-2">{product.pname} | {product.category} </p>
                         <p className="m-2 text-success">{product.pdesc}</p>
+                        {   product.addedBy && 
+                            <button onClick={() => handleContact(product.addedBy)}>
+                                Show Contact Details
+                            </button>
+                        }
+                    
                     </div>
                 </div>
             }

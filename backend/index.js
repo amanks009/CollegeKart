@@ -52,7 +52,14 @@ const Users = mongoose.model('Users',
     password: String,
     likedProducts : [{ type: mongoose.Schema.Types.ObjectId, ref:'Products'}]
   });
-const Products = mongoose.model('Products', { pname: String ,pdesc: String,price:String, category:String , pimage:String});
+const Products = mongoose.model('Products', { pname: String ,
+  pdesc: String,
+  price:String,
+  category:String ,
+  pimage:String,
+  pimage2:String,
+  addedBy: mongoose.Schema.Types.ObjectId,
+});
 
 
 
@@ -111,18 +118,23 @@ app.post('/signup',(req,res)=>{
 })
 
 
-app.post('/add-product', upload.single('pimage'),(req,res)=>{
+app.post('/add-product', upload.fields([{ name :'pimage'},{ name:'pimage2'}]),(req,res)=>{
     // console.log(req.body);
     // if(!req.file) console.log('no file found')
     // console.log(req.file.path);
+    console.log(req.files);
+    console.log(req.body)
     const pname=req.body.pname;
     const pdesc=req.body.pdesc;
     const price=req.body.price;
     const category=req.body.category;
-    const pimage=req.file.path;
+    const pimage=req.files.pimage[0].path;
+    const pimage2=req.files.pimage[0].path;
+    const addedBy=req.body.userId;
 
-    const product = new Products({pname: pname ,pdesc: pdesc,price:price , category:category , pimage:pimage });
-    product.save().then(()=>{
+    const product = new Products({pname , pdesc,price , category ,pimage,pimage2,addedBy });
+    product.save()
+    .then(()=>{
       res.send({message:'saved success..'})
     })
     .catch(()=>{
@@ -132,7 +144,14 @@ app.post('/add-product', upload.single('pimage'),(req,res)=>{
 
 // API to get the product
 app.get('/get-products' ,(req,res) => {
-  Products.find()
+
+  const catName=req.query.catName;
+  // console.log(catName);
+  let _f={ }
+  if(catName){
+    _f={category:catName}
+  }
+  Products.find(_f)
   .then((result)=>{
     // console.log(result, "user data")
     res.send({message:"Success" , products:result})
@@ -140,7 +159,25 @@ app.get('/get-products' ,(req,res) => {
   .catch((err)=>{
     // console.log("error is in get products api")
     res.send({message:'Server error'})
-  })
+  }
+  )
+
+//  try {
+//   let data;
+//   if(catName) {
+//     data = await Products.find({category:catName});
+//   }
+//   else {
+//     data = await Products.find();
+//   }
+
+//   res.send({message:"Success" , products:data})
+//  }
+//  catch(err) {
+//   console.log(err)
+//  }
+
+
 })
 
 //api to get the product and get to the product page
