@@ -15,6 +15,7 @@ function Home(){
     const [cproducts,setcproducts]=useState([]);
     const [products,setproducts]=useState([]);
     const [search,setsearch]=useState('');
+    const [issearch,setissearch]=useState(false);
  
 
     // useEffect(()=>{
@@ -47,17 +48,32 @@ function Home(){
         setsearch(value);
     }
     const handleClick=()=>{
+
+        const url='http://localhost:4000/search?search=' + search;
+        axios.get(url)
+        .then((res)=>{
+            // console.log(res.data)
+            setcproducts(res.data.products);
+            setissearch(true);
+        })
+        .catch((err)=>{
+            // console.log(err)
+            alert('err is here')
+        })
+
+
+        //HERE WE WERE SEARCHING LOCALLY
         // console.log('products',products);
-        let filteredProducts=products.filter((item)=>{
-            if( item.pname.toLowerCase().includes(search.toLowerCase()) 
-                || item.pdesc.toLowerCase().includes(search.toLowerCase()) || 
-                item.category.toLowerCase().includes(search.toLowerCase()))
+        // let filteredProducts=products.filter((item)=>{
+        //     if( item.pname.toLowerCase().includes(search.toLowerCase()) 
+        //         || item.pdesc.toLowerCase().includes(search.toLowerCase()) || 
+        //         item.category.toLowerCase().includes(search.toLowerCase()))
             
-            {
-                return item;
-            }
-        });
-        setcproducts(filteredProducts)
+        //     {
+        //         return item;
+        //     }
+        // });
+        // setcproducts(filteredProducts)
 
     }
 
@@ -97,8 +113,12 @@ function Home(){
             <Header search={search} handlesearch={handlesearch} handleClick={handleClick}/>
             <Categories handleCategory={handleCategory}/>
             {/* <h2>My products:</h2> */}
-            {/* <h5>search results</h5> */}
-            <div className="d-flex justify-content-center flex-wrap">
+            {issearch && cproducts && <h5>Search Results
+                    <button className="clear-btn" onClick={()=>setissearch(false)}>Clear</button>
+                </h5>}
+            
+            {issearch && cproducts && cproducts.length==0 && <h5>NO Result Found</h5>}
+            {issearch &&  <div className="d-flex justify-content-center flex-wrap">
             {cproducts && cproducts.length >0 &&
                 cproducts.map((item,index)=>{
                     // console.log('hello')
@@ -118,9 +138,9 @@ function Home(){
                     )
                 })
             }
-            </div>
+            </div>}
             {/* <h5>all results</h5> */}
-            <div className="d-flex justify-content-center flex-wrap">
+           {!issearch && <div className="d-flex justify-content-center flex-wrap">
                 {products && products.length >0 &&
                     products.map((item,index)=>{
                         // console.log('hello')
@@ -139,9 +159,7 @@ function Home(){
                         )
                     })
                 }
-            </div>
-
-            
+            </div>}
         </div>
     )
 }

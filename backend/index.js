@@ -60,6 +60,28 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+app.get('/search',(req,res)=>{
+
+  let search=req.query.search;
+  // console.log(query);
+  Products.find({
+    $or :[
+     { pname : {$regex : search}},
+     { pdesc : {$regex : search}},
+     { price : {$regex : search}},
+     { category : {$regex : search}},
+    ]
+  })
+    .then((results)=>{
+      // console.log(result, "user data")
+      res.send({message:"Success" , products:results})
+    })
+    .catch((err)=>{
+      // console.log("error is in get products api")
+      res.send({message:'Server error'})
+    })
+})
+
 app.post('/like-product',(req,res)=>{
     let productId=req.body.productId;
     let userId=req.body.userId;
