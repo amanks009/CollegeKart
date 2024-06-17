@@ -49,7 +49,7 @@ function Home(){
     }
     const handleClick=()=>{
 
-        const url='http://localhost:4000/search?search=' + search;
+        const url='http://localhost:4000/search?search=' + search + '&loc='+localStorage.getItem('userLoc');
         axios.get(url)
         .then((res)=>{
             // console.log(res.data)
@@ -58,7 +58,7 @@ function Home(){
         })
         .catch((err)=>{
             // console.log(err)
-            alert('err is here')
+            alert('handle search error')
         })
 
 
@@ -91,7 +91,14 @@ function Home(){
 
     const handleLike = (productId)=>{
         // console.log('userId','producId',productId)
+        e.stopPropagation();
         let userId=localStorage.getItem('userId')  
+
+        if(!userId){
+            alert('Please Login first')
+            return;
+        }
+    
         const url='http://localhost:4000/like-product';
         const data={userId,productId}
         axios.post(url,data)
@@ -124,8 +131,7 @@ function Home(){
                     // console.log('hello')
                     return (
                         <div onClick={()=>handleProduct(item._id)} key={item._id} className="card m-3">
-                            {/* <AiOutlineHeart/> */}
-                            <div onClick={()=>handleLike(item._id)} classname="icon-con">
+                            <div onClick={(e)=>handleLike(item._id,e)} classname="icon-con">
                                 <FaRegHeart className="icons"/>
                             </div>
                             <img width="250px" height="170px" src={'http://localhost:4000/'+item.pimage}/>
@@ -146,7 +152,7 @@ function Home(){
                         // console.log('hello')
                         return (
                             <div  onClick={()=>handleProduct(item._id)} key={item._id} className="card m-3">
-                                <div onClick={()=>handleLike(item._id)} className="icon-con">
+                                <div onClick={(e)=>handleLike(item._id,e)} className="icon-con">
                                     <FaRegHeart className="icons"/>
                                 </div>
                                 <img width="250px" height="170px" src={'http://localhost:4000/'+item.pimage}/>

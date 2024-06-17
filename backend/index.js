@@ -39,7 +39,7 @@ const connectDB = async () => {
     await mongoose.connect(URL);
     console.log("DB Conected")
   } catch (error) {
-    handleError(error);
+    console.log(error);
   }
 }
 
@@ -55,14 +55,30 @@ const Users = mongoose.model('Users',
     password: String,
     likedProducts : [{ type: mongoose.Schema.Types.ObjectId, ref:'Products'}]
   });
-const Products = mongoose.model('Products', { pname: String ,
-  pdesc: String,
-  price:String,
-  category:String ,
-  pimage:String,
-  pimage2:String,
-  addedBy: mongoose.Schema.Types.ObjectId,
-});
+
+  let schema= new mongoose.Schema({
+    pname: String ,
+    pdesc: String,
+    price: String,
+    category: String ,
+    pimage: String,
+    pimage2: String,
+    addedBy: mongoose.Schema.Types.ObjectId,
+    pLoc:{
+      type:{
+        type : String,
+        enum : ['Point'],
+        default : 'Point'
+      },
+      coordinates:{
+        type: [ Number ]
+      }
+    }
+  })
+
+  schema.index({pLoc: '2dsphere'});
+
+const Products = mongoose.model('Products',schema);
 
 
 
@@ -70,17 +86,53 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.get('/search',(req,res)=>{
+app.get('/search',async(req,res)=>{
 
   let search=req.query.search;
   // console.log(query);
+  // const radiusInKm = 5000;
+  // const radiusInMeters = radiusInKm * 1000;
+  let latitude=req.query.loc.split(',')[0];
+  let longitude=req.query.loc.split(',')[1];
+  // console.log(latitude)
+  // console.log(longitude)
+  
+  // const products = await Products.find({
+  //   $or: [
+  //     { pname: { $regex: search, $options: 'i' } },
+  //     { pdesc: { $regex: search, $options: 'i' } },
+  //     { price: { $regex: search, $options: 'i' } },
+  //     { category: { $regex: search, $options: 'i' } },
+  //   ],
+  //   pLoc: {
+  //     $near: {
+  //       $geometry: {
+  //         type: 'Point',
+  //         coordinates: [parseFloat(longitude), parseFloat(latitude)],
+  //       },
+  //       $maxDistance: radiusInMeters,
+
+  //     }
+  //   }
+  // });
+  // console.log(products)
   Products.find({
     $or :[
      { pname : {$regex : search}},
      { pdesc : {$regex : search}},
      { price : {$regex : search}},
      { category : {$regex : search}},
-    ]
+    ],
+    pLoc: {
+      $near: {
+        $geometry:{
+            type: 'Point',
+            coordinates :[ parseFloat(latitude), parseFloat(longitude)]
+        },
+        $maxDistance: 200 * 1000,
+      }
+    }
+
   })
     .then((results)=>{
       // console.log(result, "user data")
@@ -111,17 +163,23 @@ app.post('/add-product', upload.fields([{ name :'pimage'},{ name:'pimage2'}]),(r
     // console.log(req.body);
     // if(!req.file) console.log('no file found')
     // console.log(req.file.path);
+    
+
     console.log(req.files);
     console.log(req.body)
+    const plat=req.body.plat;
+    const plong=req.body.plong;
     const pname=req.body.pname;
     const pdesc=req.body.pdesc;
     const price=req.body.price;
     const category=req.body.category;
     const pimage=req.files.pimage[0].path;
-    const pimage2=req.files.pimage[0].path;
+    const pimage2=req.files.pimage2[0].path;
     const addedBy=req.body.userId;
 
-    const product = new Products({pname , pdesc,price , category ,pimage,pimage2,addedBy });
+    const product = new Products({pname , pdesc,price , category ,pimage,pimage2,addedBy,pLoc:{
+      type : 'Point', coordinates:[plat,plong]
+    } });
     product.save()
     .then(()=>{
       res.send({message:'saved success..'})
@@ -208,7 +266,7 @@ app.post('/signup',(req,res)=>{
       res.send({message:'Serever error'})
     })
 })
-
+ 
 app.get('/get-user/:uId',(req,res)=>{
   const _userId=req.params.uId;
   Users.findOne( { _id :_userId } )
