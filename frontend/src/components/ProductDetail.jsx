@@ -7,7 +7,7 @@ import Header from "./Header";
 function ProductDetail(){
 
     const [product,setproduct]=useState();
-
+    const [user,setuser]= useState();
     const p = useParams();
     // console.log(p.productId)
 
@@ -27,8 +27,19 @@ function ProductDetail(){
         
     },[])
 
-    const handleContact= (addedBy)=>{
-
+    const handleContact = (addedBy)=>{
+        const url='http://localhost:4000/get-user/'+ addedBy;
+        axios.get(url)
+        .then((res)=>{
+            // console.log(res)
+            if(res.data.user){
+                setuser(res.data.user)
+            }
+        })
+        .catch((err)=>{
+            // console.log(err)
+            alert('added by err')
+        })
     }
 
     return (
@@ -40,7 +51,7 @@ function ProductDetail(){
                 <div className="d-flex justify-content-between flex-wrap">
                     <div>
                         <img width="400px" height="200px" src={ 'http://localhost:4000/' + product.pimage} alt=""/>
-                        <img width="400px" height="200px" src={ 'http://localhost:4000/' + product.pimage2} alt=""/>
+                        {product.pimage2 && <img width="400px" height="200px" src={ 'http://localhost:4000/' + product.pimage2} alt=""/>}
                         <h6>Product Details:</h6>
                         {product.pdesc}
                     </div>
@@ -53,7 +64,9 @@ function ProductDetail(){
                                 Show Contact Details
                             </button>
                         }
-                    
+                        {user && user.username && <h4>{user.username}</h4>}
+                        {user && user.mobile && <h5>{user.mobile}</h5>}
+                        {user && user.email && <h6>{user.email}</h6>}
                     </div>
                 </div>
             }

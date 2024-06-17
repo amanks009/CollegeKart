@@ -5,13 +5,16 @@ import axios from "axios";
 
 function Signup(){
 
-    const [username,setusername]=useState('your webmail')
-    const [password,setpassword]=useState('enter your password')
-    
+    const [username,setusername]=useState('')
+    const [password,setpassword]=useState('')
+    const [email,setemail]=useState('')
+    const [mobile,setmobile]=useState('')
+
+
     const handleApi=()=>{
         // console.log({username,password});
         const url='http://localhost:4000/signup';
-        const data={username,password};
+        const data={ username , password , mobile , email };
         axios.post(url,data)
         .then((res)=>{
             // console.log(res.data)
@@ -26,23 +29,37 @@ function Signup(){
     }
     return(
         <div>
-        <Header/>
-        Welcome to signup page
-        <br></br>
-        USERNAME:
-        <input type="text" value={username}
-         onChange={(e)=>{
-            setusername(e.target.value)
-        }}/>
-        <br></br>
-        PASSWORD:
-        <input type="text" value={password} 
-        onChange={(e)=>{
-            setpassword(e.target.value)
-        }}/>
-        <br></br>
-        <button onClick={handleApi}>Signup</button>
-        <Link to="/login">LOGIN</Link>
+            <Header/>
+            <div className="p-3 m-3">
+                <h3>Welcome to SignUp Page</h3>
+                <br></br>
+                Username:
+                <input className="form-control" type="text" value={username}
+                onChange={(e)=>{
+                    setusername(e.target.value)
+                }}/>
+                <br></br>
+                Mobile:
+                <input className="form-control" type="text" value={mobile}
+                onChange={(e)=>{
+                    setmobile(e.target.value)
+                }}/>
+                <br></br>
+                Email:
+                <input className="form-control" type="text" value={email}
+                onChange={(e)=>{
+                    setemail(e.target.value)
+                }}/>
+                <br></br>
+                Password:
+                <input className="form-control" type="text" value={password} 
+                onChange={(e)=>{
+                    setpassword(e.target.value)
+                }}/>
+                <br></br>
+                <button className="btn btn-primary mr-3" onClick={handleApi}>Signup</button>
+                <Link className="m-3" to="/login">LOGIN</Link>
+            </div>
         </div>
     )
 }

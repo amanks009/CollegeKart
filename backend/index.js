@@ -48,7 +48,10 @@ connectDB();
 
 
 const Users = mongoose.model('Users',
-   { username: String,
+   { 
+    username: String,
+    mobile:String,
+    email:String,
     password: String,
     likedProducts : [{ type: mongoose.Schema.Types.ObjectId, ref:'Products'}]
   });
@@ -103,20 +106,6 @@ app.post('/like-product',(req,res)=>{
     })
 
   })
-
-app.post('/signup',(req,res)=>{
-  // console.log(req)
-    const username=req.body.username;
-    const password=req.body.password;
-    const user = new Users({ username: username, password:password });
-    user.save().then(()=>{
-      res.send({message:'saved success..'})
-    })
-    .catch(()=>{
-      res.send({message:'Serever error'})
-    })
-})
-
 
 app.post('/add-product', upload.fields([{ name :'pimage'},{ name:'pimage2'}]),(req,res)=>{
     // console.log(req.body);
@@ -205,6 +194,34 @@ app.post('/liked-products' ,(req,res) => {
   })
 })
 
+app.post('/signup',(req,res)=>{
+  // console.log(req)
+    const username=req.body.username;
+    const password=req.body.password;
+    const email=req.body.email;
+    const mobile=req.body.mobile;
+    const user = new Users({ username: username, password:password, email, mobile });
+    user.save().then(()=>{
+      res.send({message:'saved success..'})
+    })
+    .catch(()=>{
+      res.send({message:'Serever error'})
+    })
+})
+
+app.get('/get-user/:uId',(req,res)=>{
+  const _userId=req.params.uId;
+  Users.findOne( { _id :_userId } )
+  .then((result)=>{
+    res.send({message:'success..', user : { email: result.email,
+      mobile:result.mobile,
+      username :result.username
+    }})
+  })
+  .catch(()=>{
+    res.send({message:'Serever error'})
+  })
+})
 
 
 app.post('/login',(req,res)=>{

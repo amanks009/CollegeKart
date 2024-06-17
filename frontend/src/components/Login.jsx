@@ -38,24 +38,26 @@ function Login(){
     return(
         <div>
         <Header/>
-        Welcome to login page
-        <br></br>
-        USERNAME:
-        <input type="text" value={username}
-            onChange={(e)=>{
-                setusername(e.target.value)
-            }}
-        />
-        <br></br>
-        PASSWORD:
-        <input type="password" value={password}
-            onChange={(e)=>{
-            setpassword(e.target.value)
-        }}
-        />
-        <br></br>
-        <button onClick={handleApi}>LOGIN</button>
-        <Link to="/signup">SIGNUP!</Link>
+            <div className="p-3 m-3">
+                <h3>Welcome to Login Page</h3>
+                <br></br>
+                USERNAME:
+                <input className="form-control" type="text" value={username}
+                    onChange={(e)=>{
+                        setusername(e.target.value)
+                    }}
+                />
+                <br></br>
+                PASSWORD:
+                <input className="form-control" type="password" value={password}
+                    onChange={(e)=>{
+                    setpassword(e.target.value)
+                }}
+                />
+                <br></br>
+                <button className="btn btn-primary mr-3" onClick={handleApi}>LOGIN</button>
+                <Link className="m-3" to="/signup">SIGNUP!</Link>
+            </div>
         </div>
     )
 }
