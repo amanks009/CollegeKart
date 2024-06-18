@@ -1,10 +1,4 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom/client';
 import './index.css';
-// import App from './App';
-// import reportWebVitals from './reportWebVitals';
-
-
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -20,8 +14,8 @@ import AddProduct from './components/AddProduct';
 import LikedProducts from './components/LikedProducts';
 import ProductDetail from './components/ProductDetail';
 import CategoryPage from './components/CategoryPage';
-
-
+import MyProducts from './components/MyProducts';
+import MyProfile from './components/MyProfile';
 
 
 const router = createBrowserRouter([
@@ -56,7 +50,15 @@ const router = createBrowserRouter([
   {
     path:"/product/:productId",
     element:(<ProductDetail/>)
-  }
+  },
+  {
+    path:"/my-products",
+    element:(<MyProducts/>)
+  },
+  {
+    path:"/my-profile",
+    element:(<MyProfile/>)
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(

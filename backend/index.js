@@ -92,8 +92,8 @@ app.get('/search',async(req,res)=>{
   // console.log(query);
   // const radiusInKm = 5000;
   // const radiusInMeters = radiusInKm * 1000;
-  let latitude=req.query.loc.split(',')[0];
-  let longitude=req.query.loc.split(',')[1];
+  let latitude=req.query?.loc?.split(',')[0];
+  let longitude=req.query?.loc?.split(',')[1];
   // console.log(latitude)
   // console.log(longitude)
   
@@ -129,7 +129,7 @@ app.get('/search',async(req,res)=>{
             type: 'Point',
             coordinates :[ parseFloat(latitude), parseFloat(longitude)]
         },
-        $maxDistance: 200 * 1000,
+        $maxDistance: 300 * 1000,
       }
     }
 
@@ -252,6 +252,18 @@ app.post('/liked-products' ,(req,res) => {
   })
 })
 
+
+app.post('/my-products' ,(req,res) => {
+  const userId=req.body.userId;
+  Products.find( {addedBy : userId} )
+  .then((result)=>{
+    res.send({message:"Success" , products:result})
+  })
+  .catch((err)=>{
+    res.send({message:'Server error'})
+  })
+})
+
 app.post('/signup',(req,res)=>{
   // console.log(req)
     const username=req.body.username;
@@ -267,6 +279,21 @@ app.post('/signup',(req,res)=>{
     })
 })
  
+app.get('/my-profile/:userId',(req,res)=>{
+  let uid=req.params.userId
+  Users.findOne({_id:uid})
+  .then((result)=>{
+    res.send({message:'success..', user :
+      { email: result.email,
+      mobile:result.mobile,
+      username :result.username
+    }})
+  })
+  .catch(()=>{
+    res.send({message:'Serever error'})
+  })
+})
+
 app.get('/get-user/:uId',(req,res)=>{
   const _userId=req.params.uId;
   Users.findOne( { _id :_userId } )

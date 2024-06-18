@@ -19,13 +19,13 @@ function Header(props){
 
     let locations =[
         {
-            "latitude":11.0420173,
-            "longitude":76.9758697,
+            "latitude":13.0108,
+            "longitude":74.7943,
             "placeName":"NIT Trichy,Trichy"
         },
         {
-            "latitude":13.0108,
-            "longitude":74.7943,
+            "latitude":15.0108,
+            "longitude":77.7863,
             "placeName":"NIT Surathkal,Surathkal"
         },
         {
@@ -43,6 +43,7 @@ function Header(props){
             <select value={loc} onChange={(e)=>{
                 localStorage.setItem('userLoc',e.target.value)
                 setLoc(e.target.value)
+                console.log(e.target.value)
             }}>
                 {
                     locations.map((item,index)=>{
@@ -68,7 +69,7 @@ function Header(props){
                 {showover && <div classNmae="r-icon-list">
                     <div>
                         {!!localStorage.getItem('token') && 
-                        <Link  to="/liked-products"><button className="logout-btn">LikedProduct </button>
+                        <Link  to="/liked-products"><button className="logout-btn">Favourites </button>
                         </Link>}
                     </div>
                     <div>
@@ -81,6 +82,11 @@ function Header(props){
                         <Link to="/login">LOGIN!</Link> :
                         <button className="logout-btn" onClick={handleLogout}>LOGOUT</button>
                         }
+                    </div>
+                    <div>
+                    {!!localStorage.getItem('token') && 
+                        <Link  to="/my-products"><button className="logout-btn">My Product </button>
+                        </Link>}
                     </div>
                 </div>}
            </div>
