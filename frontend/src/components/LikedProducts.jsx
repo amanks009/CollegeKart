@@ -105,7 +105,7 @@ function LikedProducts(){
                             <div onClick={()=>handleLike(item._id)} classname="icon-con">
                                 <FaRegHeart className="icons"/>
                             </div>
-                            <img width="200px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
+                            <img width="250px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
                             <p className="m-2">{item.pname} | {item.category} </p>
                             <h3 className="m-2 text-danger">{item.price}</h3> 
                             <p className="m-2 text-success">{item.pdesc}</p>
@@ -123,7 +123,7 @@ function LikedProducts(){
                         return (
                             <div key={item._id} className="card m-3">
                                 <div onClick={()=>handleLike(item._id)} className="icon-con">
-                                    <FaRegHeart className="icons"/>
+                                    <FaRegHeart className="red-icons"/>
                                 </div>
                                 <img width="200px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
                                 <p className="m-2">{item.pname} | {item.category} </p>

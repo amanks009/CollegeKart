@@ -11,6 +11,10 @@
 
 }
 
+.links{
+    margin-right: 10px;
+}
+
 .cat-container{
     /* height:50px; */
     
@@ -77,18 +81,18 @@
 }
 
 .r-icon-list{
+        cursor: pointer;
         min-height: 100px;
         width: 200px;
         background: #eee;
         position: absolute;
         top: 0;
-        right: 0;
+        right: 10px;
         z-index: 1;
-        margin-top: 50px;
-        margin-right: 50px;
+        margin-top: 55px;
+        /* margin-right: 50px; */
         color: red;
         font-size: 14px;
         background : #002f34;
         border-radius: 7px;
-
 }

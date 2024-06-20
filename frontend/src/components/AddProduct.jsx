@@ -11,7 +11,7 @@ function AddProduct(){
     const [pname,setpname]=useState('');
     const [pdesc,setpdesc]=useState('');
     const [price,setprice]=useState('');
-    const [category,setcategory]=useState('');
+    const [category,setcategory]=useState('Cycle');
     const [pimage,setpimage]=useState('');
     const [pimage2 , setpimage2 ] = useState('');
 

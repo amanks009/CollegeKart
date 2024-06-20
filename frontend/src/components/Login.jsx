@@ -23,6 +23,8 @@ function Login(){
                     // console.log('jgchdc')
                     localStorage.setItem('token', res.data.token);
                     localStorage.setItem('userId', res.data.userId);
+                    console.log(res.data)
+                    localStorage.setItem('userData', res.data.username)
                     navigate('/');
                 }
                 

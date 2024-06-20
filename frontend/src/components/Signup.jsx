@@ -2,9 +2,10 @@ import Header from './Header';
 import {Link} from 'react-router-dom';
 import {useState} from 'react';
 import axios from "axios";
-
+import { useNavigate } from 'react-router-dom';
 function Signup(){
 
+    const navigate=useNavigate();
     const [username,setusername]=useState('')
     const [password,setpassword]=useState('')
     const [email,setemail]=useState('')
@@ -20,6 +21,7 @@ function Signup(){
             // console.log(res.data)
             if(res.data.message){
                 alert(res.data.message)
+                navigate('/login')
             }
         })
         .catch((err)=>{

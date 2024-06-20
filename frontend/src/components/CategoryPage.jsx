@@ -19,6 +19,8 @@ function CategoryPage(){
     const [products,setproducts]=useState([]);
     const [search,setsearch]=useState('');
     const [issearch,setissearch]=useState(false);
+    const [ refresh,setrefresh ] = useState(false);
+    const [likedproducts, setlikedproducts] = useState([]);
  
 
     // useEffect(()=>{
@@ -42,8 +44,19 @@ function CategoryPage(){
             // console.log(err)
             alert('err is here')
         })
+        const url2 = 'http://localhost:4000/liked-products';
+        let data= { userId: localStorage.getItem('userId')}
+        axios.post(url2,data)
+        .then((res) => {
+            if (res.data.products) {
+                setlikedproducts(res.data.products);
+            }
+        })
+        .catch((err) => {
+            alert('Error fetching liked-products');
+        });
         
-    },[param])
+    },[param,refresh])
 
 
     const handlesearch = (value)=>{
@@ -91,19 +104,43 @@ function CategoryPage(){
         setcproducts(filteredProducts)
     }
 
-    const handleLike = (productId)=>{
+    const handleLike = (productId,e)=>{
         // console.log('userId','producId',productId)
+        e.stopPropagation();
         let userId=localStorage.getItem('userId')  
         const url='http://localhost:4000/like-product';
         const data={userId,productId}
         axios.post(url,data)
         .then((res)=>{
             alert('Liked product')
+            setrefresh(!refresh)
         })
         .catch((err)=>{
             console.log(err)
             alert('err is here')
         })
+    }
+
+    const handleDisLike = (productId, e) => {
+        e.stopPropagation();
+        let userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            alert('Please Login first');
+            return;
+        }
+
+        const url = 'http://localhost:4000/dislike-product';
+        const data = {userId, productId};
+        axios.post(url, data)
+            .then((res) => {
+                alert('Removed from favourites');
+                setrefresh(!refresh)
+            })
+            .catch((err) => {
+                console.log(err);
+                alert('Error liking product');
+            });
     }
 
     const handleProduct=(id)=>{
@@ -148,8 +185,12 @@ function CategoryPage(){
                         // console.log('hello')
                         return (
                             <div  onClick={()=>handleProduct(item._id)} key={item._id} className="card m-3">
-                                <div onClick={()=>handleLike(item._id)} className="icon-con">
-                                    <FaRegHeart className="icons"/>
+                                <div className="icon-con">
+                                {
+                                       likedproducts.find((likedItem)=>likedItem._Id===item._id)?
+                                       <FaRegHeart onClick={(e) => handleDisLike(item._id, e)} className="red-icons"/>: 
+                                       <FaRegHeart onClick={(e) => handleLike(item._id, e)}  className="icons"/>
+                                    }
                                 </div>
                                 <img width="250px" height="170px" src={'http://localhost:4000/'+item.pimage}/>
                                 <h3 className="m-2 price-text">Rs. {item.price} /-</h3>

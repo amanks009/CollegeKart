@@ -10,7 +10,9 @@ function Home() {
     const navigate = useNavigate();
     const [cproducts, setcproducts] = useState([]);
     const [products, setproducts] = useState([]);
+    const [likedproducts, setlikedproducts] = useState([]);
     const [search, setsearch] = useState('');
+    const [ refresh,setrefresh ] = useState(false);
     const [issearch, setissearch] = useState(false);
 
     useEffect(() => {
@@ -24,7 +26,20 @@ function Home() {
             .catch((err) => {
                 alert('Error fetching products');
             });
-    }, []);
+
+            const url2 = 'http://localhost:4000/liked-products';
+            let data= { userId: localStorage.getItem('userId')}
+            axios.post(url2,data)
+            .then((res) => {
+                if (res.data.products) {
+                    setlikedproducts(res.data.products);
+                }
+            })
+            .catch((err) => {
+                alert('Error fetching liked-products');
+            });
+
+    }, [refresh]);
 
     const handlesearch = (value) => {
         setsearch(value);
@@ -65,12 +80,36 @@ function Home() {
         axios.post(url, data)
             .then((res) => {
                 alert('Liked product');
+                setrefresh(!refresh)
             })
             .catch((err) => {
                 console.log(err);
                 alert('Error liking product');
             });
     }
+
+    const handleDisLike = (productId, e) => {
+        e.stopPropagation();
+        let userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            alert('Please Login first');
+            return;
+        }
+
+        const url = 'http://localhost:4000/dislike-product';
+        const data = {userId, productId};
+        axios.post(url, data)
+            .then((res) => {
+                alert('Removed from favourites');
+                setrefresh(!refresh)
+            })
+            .catch((err) => {
+                console.log(err);
+                alert('Error liking product');
+            });
+    }
+
 
     const handleProduct = (id) => {
         navigate('/product/' + id);
@@ -106,13 +145,17 @@ function Home() {
                     products.map((item) => {
                         return (
                             <div onClick={() => handleProduct(item._id)} key={item._id} className="card m-3">
-                                <div onClick={(e) => handleLike(item._id, e)} className="icon-con">
-                                    <FaRegHeart className="icons"/>
+                                <div className="icon-con">
+                                    {
+                                       likedproducts.find((likedItem)=>likedItem._Id===item._id)?
+                                       <FaRegHeart onClick={(e) => handleDisLike(item._id, e)} className="red-icons"/>: 
+                                       <FaRegHeart onClick={(e) => handleLike(item._id, e)}  className="icons"/>
+                                    }
                                 </div>
                                 <img width="250px" height="170px" src={'http://localhost:4000/' + item.pimage}/>
                                 <h3 className="m-2 price-text">Rs. {item.price} /-</h3>
                                 <p className="m-2">{item.pname} | {item.category}</p>
-                                <p className="m-2 text-success">{item.pdesc}</p>
+                                <p className="m-2 text-success card-desc">{item.pdesc}</p>
                             </div>
                         )
                     })

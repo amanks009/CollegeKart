@@ -1,5 +1,5 @@
 import './Header.css';
-import {Link,useNavigate} from 'react-router-dom';
+import {Link,json,useNavigate} from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import { useState } from 'react';
 
@@ -35,6 +35,12 @@ function Header(props){
         }
     ]
 
+    let userData = localStorage.getItem('userData');
+    let firstLetter = 'L'
+    console.log(userData)
+    if(userData) 
+        firstLetter = userData[0]
+
 
     return(
         <div className="header-container d-flex justify-content-between">
@@ -63,10 +69,13 @@ function Header(props){
            </div>
            <div>
                 <div className="r-icon"onClick= {()=>{setshowover(!showover)}}>
-                    N
+                    {
+
+                       firstLetter
+                    }
                 </div>
 
-                {showover && <div classNmae="r-icon-list">
+                {showover && <div className="r-icon-list">
                     <div>
                         {!!localStorage.getItem('token') && 
                         <Link  to="/liked-products"><button className="logout-btn">Favourites </button>
