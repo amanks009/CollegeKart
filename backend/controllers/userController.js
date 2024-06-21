@@ -25,7 +25,7 @@ module.exports.likeProducts=(req,res)=>{
 
 }
 
-module.exports.likeProducts=(req,res)=>{
+module.exports.dislikeProducts=(req,res)=>{
   let productId=req.body.productId;
   let userId=req.body.userId;
   console.log(req.body);
