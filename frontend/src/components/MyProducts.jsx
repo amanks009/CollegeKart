@@ -15,6 +15,7 @@ function MyProducts(){
     const [cproducts,setcproducts]=useState([]);
     const [products,setproducts]=useState([]);
     const [search,setsearch]=useState('');
+    const [refresh,setrefresh]=useState(false);
  
 
     // useEffect(()=>{
@@ -40,7 +41,7 @@ function MyProducts(){
             alert('err is here')
         })
         
-    },[])
+    },[refresh])
 
 
     const handlesearch = (value)=>{
@@ -89,6 +90,30 @@ function MyProducts(){
         })
     }
 
+    const handleDel=(pid)=>{
+        // console.log(pid);
+        if(!localStorage.getItem('userId')){
+            alert('Login First')
+            return ;
+        }
+        const url='http://localhost:4000/delete-product';
+        const data={
+            pid,
+            userId : localStorage.getItem('userId')
+        }
+        
+        axios.post(url,data)
+        .then((res)=>{
+            if(res.data.message){
+                alert('Product removed')
+                setrefresh(!refresh)
+            }
+        })
+        .catch((err)=>{
+            alert('server error')
+        })
+    }
+
     return (
         <div>
             <Header search={search} handlesearch={handlesearch} handleClick={handleClick}/>
@@ -107,7 +132,7 @@ function MyProducts(){
                             <p className="m-2">{item.pname} | {item.category} </p>
                             <h3 className="m-2 text-danger">{item.price}</h3> 
                             <p className="m-2 text-success">{item.pdesc}</p>
-                            
+                            {/* <button>Delete</button> */}
                         </div>
                     )
                 })
@@ -123,11 +148,11 @@ function MyProducts(){
                                 <div onClick={()=>handleLike(item._id)} className="icon-con">
                                     <FaRegHeart className="icons"/>
                                 </div>
-                                <img width="200px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
+                                <img width="250px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
                                 <p className="m-2">{item.pname} | {item.category} </p>
-                                <h3 className="m-2 text-danger">{item.price}</h3> 
-                                <p className="m-2 text-success">{item.pdesc}</p>
-                                
+                                <h5 className="m-2 text-danger">{item.price}</h5> 
+                                {/* <p className="m-2 text-success">{item.pdesc}</p> */} 
+                                <button onClick={()=>handleDel(item._id)}>Delete</button>
                             </div>
                         )
                     })

@@ -187,7 +187,7 @@ function CategoryPage(){
                             <div  onClick={()=>handleProduct(item._id)} key={item._id} className="card m-3">
                                 <div className="icon-con">
                                 {
-                                       likedproducts.find((likedItem)=>likedItem._Id===item._id)?
+                                       likedproducts.find((likedItem)=>likedItem._id===item._id)?
                                        <FaRegHeart onClick={(e) => handleDisLike(item._id, e)} className="red-icons"/>: 
                                        <FaRegHeart onClick={(e) => handleLike(item._id, e)}  className="icons"/>
                                     }

@@ -172,3 +172,25 @@ module.exports.getProductById=(req,res) => {
     })
   }
   
+module.exports.deleteProduct=(req,res)=>{
+    // console.log(req.body);
+
+    Products.findOne({_id: req.body.pid})
+    .then((result)=>{
+      if(result.addedBy===req.body.userId){
+        Products.deleteOne({ _id: req.body.pid})
+        .then((deleteResult)=>{
+          console.log(deleteResult)
+          if(deleteResult.acknowledged){
+            res.send({message: 'success'})
+          }
+        })
+        .catch(()=>{
+          res.send({message: 'server error'})
+        })
+    }
+    })
+    .catch(()=>{
+      res.send({message: 'server error'})
+    })
+}

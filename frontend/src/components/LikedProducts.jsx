@@ -15,7 +15,7 @@ function LikedProducts(){
     const [cproducts,setcproducts]=useState([]);
     const [products,setproducts]=useState([]);
     const [search,setsearch]=useState('');
- 
+    const [ refresh,setrefresh ] = useState(false);
 
     // useEffect(()=>{
     //     // console.log(localStorage.getItem('token'))
@@ -60,6 +60,28 @@ function LikedProducts(){
         });
         setcproducts(filteredProducts)
 
+    }
+
+    const handleDisLike = (productId, e) => {
+        e.stopPropagation();
+        let userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            alert('Please Login first');
+            return;
+        }
+
+        const url = 'http://localhost:4000/dislike-product';
+        const data = {userId, productId};
+        axios.post(url, data)
+            .then((res) => {
+                alert('Removed from favourites');
+                setrefresh(!refresh)
+            })
+            .catch((err) => {
+                console.log(err);
+                alert('Error liking product');
+            });
     }
 
     const handleCategory=(value)=>{

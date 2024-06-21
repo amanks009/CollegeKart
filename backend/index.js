@@ -53,6 +53,8 @@ app.post('/dislike-product',userController.dislikeProducts)
 app.post('/add-product', upload.fields([{ name :'pimage'},{ name:'pimage2'}]),productController.addProduct)
 // API to get the product
 app.get('/get-products' ,productController.getProducts)
+
+app.post('/delete-product' ,productController.deleteProduct)
 //api to get the product and get to the product page
 app.get('/get-product/:pId' ,productController.getProductById)
 //api to get the liked products
