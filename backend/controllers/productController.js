@@ -172,12 +172,13 @@ module.exports.getProductById=(req,res) => {
     })
   }
   
-module.exports.deleteProduct=(req,res)=>{
+  module.exports.deleteProduct=(req,res)=>{
     // console.log(req.body);
 
     Products.findOne({_id: req.body.pid})
     .then((result)=>{
-      if(result.addedBy===req.body.userId){
+      // console.log(result)
+      if(result.addedBy==req.body.userId){
         Products.deleteOne({ _id: req.body.pid})
         .then((deleteResult)=>{
           console.log(deleteResult)

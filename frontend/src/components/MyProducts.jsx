@@ -151,6 +151,7 @@ function MyProducts(){
                                 <img width="250px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
                                 <p className="m-2">{item.pname} | {item.category} </p>
                                 <h5 className="m-2 text-danger">{item.price}</h5> 
+                                <p className="m-2 text-danger"><Link to={ `/edit-product/${item._id}`}>Edit product</Link></p> 
                                 {/* <p className="m-2 text-success">{item.pdesc}</p> */} 
                                 <button onClick={()=>handleDel(item._id)}>Delete</button>
                             </div>
