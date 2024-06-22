@@ -111,6 +111,61 @@ module.exports.addProduct=(req,res)=>{
     })
 }
 
+
+module.exports.editProduct=(req,res)=>{
+  // console.log(req.body);
+  // if(!req.file) console.log('no file found')
+  // console.log(req.file.path);
+  
+
+  console.log(req.files);
+  console.log(req.body)
+  
+  const pid=req.body.pid;
+  const pname=req.body.pname;
+  const pdesc=req.body.pdesc;
+  const price=req.body.price;
+  const category=req.body.category;
+  let pimage='';
+  let pimage2='';
+
+  if(req.files && req.files.pimage && req.files.pimage.length > 0){
+    pimage=req.files.pimage[0].path;
+  }
+  if(req.files && req.files.pimage2 && req.files.pimage2.length > 0){
+    pimage2=req.files.pimage2[0].path;
+  }
+  let editObj={};
+
+  if(pname){
+    editObj.pname=pname;
+  }
+  if(pdesc){
+    editObj.pdesc=pdesc;
+  }
+  if(price){
+    editObj.price=price;
+  }
+  if(category){
+    editObj.category=category;
+  }
+  if(pimage){
+    editObj.pimage=pimage;
+  }
+  if(pimage2){
+    editObj.pimage2=pimage2;
+  }
+
+
+  Products.updateOne({_id:pid},editObj,{new:true})
+  .then((result)=>{
+    res.send({message:'saved success..', product:result})
+  })
+  .catch(()=>{
+    res.send({message:'Serever error'})
+  })
+}
+
 module.exports.getProducts=(req,res) => {
 
     const catName=req.query.catName;
@@ -149,13 +204,14 @@ module.exports.getProducts=(req,res) => {
 }
 
 module.exports.getProductById=(req,res) => {
-
+  console.log(req.params.pId)
     Products.findOne( {_id : req.params.pId} )
     .then((result)=>{
       // console.log(result, "user data")
       res.send({message:"Success" , product:result})
     })
     .catch((err)=>{
+      console.log(err)
       // console.log("error is in get products api")
       res.send({message:'Server error'})
     })

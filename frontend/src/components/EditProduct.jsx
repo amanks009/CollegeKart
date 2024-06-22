@@ -27,12 +27,14 @@ function EditProduct(){
     },[])
 
     useEffect(()=>{
-        const url='http://localhost:4000/get-product/'+p.productId;
+        console.log(p)
+        const url='http://localhost:4000/get-product/'+p.productid;
         axios.get(url)
         .then((res)=>{
             console.log(res)
             if(res.data.product){
                 // setproduct(res.data.product)
+                
                 let product=res.data.product;
                 setpname(product.pname)
                 setpdesc(product.pdesc)
@@ -50,11 +52,9 @@ function EditProduct(){
     },[])
 
     const handleApi=()=>{
-
-        navigator.geolocation.getCurrentPosition((position)=>{
             const formData= new FormData();
-            formData.append('plat',position.coords.latitude)
-            formData.append('plong',position.coords.longitude)
+
+            formData.append('pid',p.productid);
             formData.append('pname',pname);
             formData.append('pdesc',pdesc);
             formData.append('price',price);
@@ -63,18 +63,17 @@ function EditProduct(){
             formData.append('pimage2',pimage2);
             formData.append('userId',localStorage.getItem('userId'));
 
-            const url='http://localhost:4000/add-product';
+            const url='http://localhost:4000/edit-product';
             axios.post(url,formData)
             .then((res)=>{
                 console.log(res)
                 if(res.data.message){
                     alert(res.data.message);
-                    navigate('/');
+                    navigate('/my-products');
                 }
             })
             .catch((err)=>{
                 console.log(err)
-            })
             })
     }
 
