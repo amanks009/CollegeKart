@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose');
+const md5 = require('md5');
 const jwt=require('jsonwebtoken')
 const Users = mongoose.model('Users',
     { 
@@ -40,13 +41,20 @@ module.exports.dislikeProducts=(req,res)=>{
 
 }
 
-module.exports.signup=(req,res)=>{
+module.exports.signup=async (req,res)=>{
     // console.log(req)
       const username=req.body.username;
       const password=req.body.password;
+      const encrypt_password=md5(password);
+      // console.log(encrypt_password);
       const email=req.body.email;
       const mobile=req.body.mobile;
-      const user = new Users({ username: username, password:password, email, mobile });
+      const existing_username=await Users.findOne({username});
+      if(existing_username){
+        res.status(400).send("username already exist");
+        return;
+      }
+      const user = new Users({ username: username, password:encrypt_password, email, mobile });
       user.save().then(()=>{
         res.send({message:'saved success..'})
       })
@@ -88,8 +96,9 @@ module.exports.myProfileById=(req,res)=>{
     // console.log(req)
       const username=req.body.username;
       const password=req.body.password;
+      const enc_pass=md5(password);
       // const user = new Users({ username: username, password:password });
-      
+      // console.log(req);
       Users.findOne({ username : username })
       .then((result)=>{
         console.log(result, "user data")
@@ -97,13 +106,15 @@ module.exports.myProfileById=(req,res)=>{
           res.send({message:'user not found'})
         }
         else{
-          if(result.password==password){
+          if(result.password===enc_pass){
+            console.log(enc_pass)
             const token=jwt.sign({
               data: result
             }, 'MYKEY', { expiresIn: '1h' });
             res.send({message:'find success..',token:token,userId:result._id, username: result.username})
+            return;
           }
-          if(result.password!=password){
+          if(result.password!=enc_pass){
             res.send({message:'user not found'})
           }
         }

@@ -18,7 +18,7 @@ function Signup(){
         const data={ username , password , mobile , email };
         axios.post(url,data)
         .then((res)=>{
-            // console.log(res.data)
+            console.log(res.data)
             if(res.data.message){
                 alert(res.data.message)
                 navigate('/login')
@@ -26,7 +26,7 @@ function Signup(){
         })
         .catch((err)=>{
             // console.log(err)
-            alert('SERVER ERROR')
+            alert('username already exist')
         })
     }
     return(
