@@ -1,9 +1,9 @@
-import Header from './Header';
-import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import Header from './Header';
 import Categories from './Categories';
-import {FaHeart, FaRegHeart} from 'react-icons/fa';
 import './Home.css';
 
 function Home() {
@@ -12,156 +12,152 @@ function Home() {
     const [products, setproducts] = useState([]);
     const [likedproducts, setlikedproducts] = useState([]);
     const [search, setsearch] = useState('');
-    const [ refresh,setrefresh ] = useState(false);
+    const [refresh, setrefresh] = useState(false);
     const [issearch, setissearch] = useState(false);
 
     useEffect(() => {
-        const url = 'http://localhost:4000/get-products';
-        axios.get(url)
-            .then((res) => {
-                if (res.data.products) {
-                    setproducts(res.data.products);
-                }
-            })
-            .catch((err) => {
-                alert('Error fetching products');
-            });
+        axios.get('https://collegekart-ltme.onrender.com/get-products')
+            .then(res => setproducts(res.data.products))
+            .catch(() => alert('Error fetching products'));
 
-            const url2 = 'http://localhost:4000/liked-products';
-            let data= { userId: localStorage.getItem('userId')}
-            axios.post(url2,data)
-            .then((res) => {
-                if (res.data.products) {
-                    setlikedproducts(res.data.products);
-                }
-            })
-            .catch((err) => {
-                alert('Error fetching liked-products');
-            });
-
+        axios.post('https://collegekart-ltme.onrender.com/liked-products', { userId: localStorage.getItem('userId') })
+            .then(res => setlikedproducts(res.data.products))
+            .catch(() => alert('Error fetching liked-products'));
     }, [refresh]);
 
-    const handlesearch = (value) => {
-        setsearch(value);
-    }
+    const handlesearch = value => setsearch(value);
 
     const handleClick = () => {
-        const url = 'http://localhost:4000/search?search=' + search + '&loc=' + localStorage.getItem('userLoc');
-        axios.get(url)
-            .then((res) => {
+        axios.get(`https://collegekart-ltme.onrender.com/search?search=${search}&loc=${localStorage.getItem('userLoc')}`)
+            .then(res => {
                 setcproducts(res.data.products);
                 setissearch(true);
             })
-            .catch((err) => {
-                alert('Error during search');
-            });
-    }
+            .catch(() => alert('Error during search'));
+    };
 
-    const handleCategory = (value) => {
-        let filteredProducts = products.filter((item) => {
-            if (item.category.toLowerCase() === value.toLowerCase()) {
-                return item;
-            }
-        });
-        setcproducts(filteredProducts);
-    }
+    const handleCategory = value => {
+        setcproducts(products.filter(item => item.category.toLowerCase() === value.toLowerCase()));
+    };
 
     const handleLike = (productId, e) => {
         e.stopPropagation();
-        let userId = localStorage.getItem('userId');
-
-        if (!userId) {
+        if (!localStorage.getItem('userId')) {
             alert('Please Login first');
             return;
         }
-
-        const url = 'http://localhost:4000/like-product';
-        const data = {userId, productId};
-        axios.post(url, data)
-            .then((res) => {
+        axios.post('https://collegekart-ltme.onrender.com/like-product', { userId: localStorage.getItem('userId'), productId })
+            .then(() => {
                 alert('Liked product');
-                setrefresh(!refresh)
+                setrefresh(!refresh);
             })
-            .catch((err) => {
-                console.log(err);
-                alert('Error liking product');
-            });
-    }
+            .catch(() => alert('Error liking product'));
+    };
 
     const handleDisLike = (productId, e) => {
         e.stopPropagation();
-        let userId = localStorage.getItem('userId');
-
-        if (!userId) {
+        if (!localStorage.getItem('userId')) {
             alert('Please Login first');
             return;
         }
-
-        const url = 'http://localhost:4000/dislike-product';
-        const data = {userId, productId};
-        axios.post(url, data)
-            .then((res) => {
+        axios.post('https://collegekart-ltme.onrender.com/dislike-product', { userId: localStorage.getItem('userId'), productId })
+            .then(() => {
                 alert('Removed from favourites');
-                setrefresh(!refresh)
+                setrefresh(!refresh);
             })
-            .catch((err) => {
-                console.log(err);
-                alert('Error liking product');
-            });
-    }
+            .catch(() => alert('Error disliking product'));
+    };
 
-
-    const handleProduct = (id) => {
-        navigate('/product/' + id);
-    }
+    const handleProduct = id => navigate(`/product/${id}`);
 
     return (
-        <div>
-            <Header search={search} handlesearch={handlesearch} handleClick={handleClick}/>
-            <Categories handleCategory={handleCategory}/>
-            {issearch && cproducts && <h5>Search Results
-                <button className="clear-btn" onClick={() => setissearch(false)}>Clear</button>
-            </h5>}
-            {issearch && cproducts && cproducts.length === 0 && <h5>No Results Found</h5>}
-            {issearch && <div className="d-flex justify-content-center flex-wrap">
-                {cproducts && cproducts.length > 0 &&
-                    cproducts.map((item) => {
-                        return (
-                            <div onClick={() => handleProduct(item._id)} key={item._id} className="card m-3">
-                                <div onClick={(e) => handleLike(item._id, e)} className="icon-con">
-                                    <FaRegHeart className="icons"/>
+        <div className="home-container">
+            <Header search={search} handlesearch={handlesearch} handleClick={handleClick} />
+            <Categories handleCategory={handleCategory} />
+            {issearch && (
+                <div className="text-center container py-5">
+                    <h4 className="mt-4 mb-5"><strong>Search Results</strong></h4>
+                    <button className="clear-btn" onClick={() => setissearch(false)}>Clear</button>
+                    <div className="row">
+                        {cproducts.length > 0 ? cproducts.map(item => (
+                            <div onClick={() => handleProduct(item._id)} key={item._id} className="col-lg-4 col-md-6 mb-4">
+                                <div className="card">
+                                    <div className="bg-image hover-zoom ripple ripple-surface ripple-surface-light" data-mdb-ripple-color="light">
+                                        <img src={`https://collegekart-ltme.onrender.com/${item.pimage}`} className="w-100" alt={item.pname} />
+                                        <div className="mask">
+                                            <div className="d-flex justify-content-start align-items-end h-100">
+                                                <h5>
+                                                    <span className={`badge ms-2 ${item.isNew ? 'bg-primary' : ''}`}>{item.isNew ? 'New' : ''}</span>
+                                                    <span className={`badge ms-2 ${item.isEco ? 'bg-success' : ''}`}>{item.isEco ? 'Eco' : ''}</span>
+                                                    <span className={`badge ms-2 ${item.isDiscount ? 'bg-danger' : ''}`}>{item.isDiscount ? `-${item.discount}%` : ''}</span>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="card-body">
+                                        <h5 className="card-title mb-3">{item.pname}</h5>
+                                        <p className="card-text">{item.category}</p>
+                                        <h6 className="mb-3">
+                                            {item.isDiscount ? (
+                                                <>
+                                                    <s>${item.price}</s>
+                                                    <strong className="ms-2 text-danger">${item.discountedPrice}</strong>
+                                                </>
+                                            ) : (
+                                                `$${item.price}`
+                                            )}
+                                        </h6>
+                                        <div onClick={e => likedproducts.find(likedItem => likedItem._id === item._id) ? handleDisLike(item._id, e) : handleLike(item._id, e)} className="icon-con">
+                                            {likedproducts.find(likedItem => likedItem._id === item._id) ? <FaHeart className="icons red-icons" /> : <FaRegHeart className="icons" />}
+                                        </div>
+                                    </div>
                                 </div>
-                                <img width="250px" height="170px" src={'http://localhost:4000/' + item.pimage}/>
-                                <h3 className="m-2 price-text">Rs. {item.price} /-</h3>
-                                <p className="m-2">{item.pname} | {item.category}</p>
-                                <p className="m-2 text-success">{item.pdesc}</p>
                             </div>
-                        )
-                    })
-                }
-            </div>}
-            {!issearch && <div className="d-flex justify-content-center flex-wrap">
-                {products && products.length > 0 &&
-                    products.map((item) => {
-                        return (
-                            <div onClick={() => handleProduct(item._id)} key={item._id} className="card m-3">
-                                <div className="icon-con">
-                                    {
-                                       likedproducts.find((likedItem)=>likedItem._id===item._id)?
-                                       <FaRegHeart onClick={(e) => handleDisLike(item._id, e)} className="red-icons"/>: 
-                                       <FaRegHeart onClick={(e) => handleLike(item._id, e)}  className="icons"/>
-                                       
-                                    }
+                        )) : <h5>No Results Found</h5>}
+                    </div>
+                </div>
+            )}
+            {!issearch && (
+                <div className="text-center container py-5">
+                    <div className="row">
+                        {products.map(item => (
+                            <div onClick={() => handleProduct(item._id)} key={item._id} className="col-lg-4 col-md-6 mb-4">
+                                <div className="card">
+                                    <div className="bg-image hover-zoom ripple ripple-surface ripple-surface-light" data-mdb-ripple-color="light">
+                                        <img src={`https://collegekart-ltme.onrender.com/${item.pimage}`} className="w-100" alt={item.pname} />
+                                        <div className="mask">
+                                            <div className="d-flex justify-content-start align-items-end h-100">
+                                                <h5>
+                                                    <span className={`badge ms-2 ${item.isNew ? 'bg-primary' : ''}`}>{item.isNew ? 'New' : ''}</span>
+                                                    <span className={`badge ms-2 ${item.isEco ? 'bg-success' : ''}`}>{item.isEco ? 'Eco' : ''}</span>
+                                                    <span className={`badge ms-2 ${item.isDiscount ? 'bg-danger' : ''}`}>{item.isDiscount ? `-${item.discount}%` : ''}</span>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="card-body">
+                                        <h5 className="card-title mb-3">{item.pname}</h5>
+                                        <p className="card-text">{item.category}</p>
+                                        <h6 className="mb-3">
+                                            {item.isDiscount ? (
+                                                <>
+                                                    <s>${item.price}</s>
+                                                    <strong className="ms-2 text-danger">${item.discountedPrice}</strong>
+                                                </>
+                                            ) : (
+                                                `$${item.price}`
+                                            )}
+                                        </h6>
+                                        <div onClick={e => likedproducts.find(likedItem => likedItem._id === item._id) ? handleDisLike(item._id, e) : handleLike(item._id, e)} className="icon-con">
+                                            {likedproducts.find(likedItem => likedItem._id === item._id) ? <FaHeart className="icons red-icons" /> : <FaRegHeart className="icons" />}
+                                        </div>
+                                    </div>
                                 </div>
-                                <img width="250px" height="170px" src={'http://localhost:4000/' + item.pimage}/>
-                                <h3 className="m-2 price-text">Rs. {item.price} /-</h3>
-                                <p className="m-2">{item.pname} | {item.category}</p>
-                                <p className="m-2 text-success card-desc">{item.pdesc}</p>
                             </div>
-                        )
-                    })
-                }
-            </div>}
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

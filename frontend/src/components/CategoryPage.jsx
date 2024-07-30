@@ -1,125 +1,82 @@
-import Header from './Header';
-import {useEffect,useState} from 'react';
-import {useNavigate,Link, useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import Header from './Header';
 import Categories from './Categories';
-// import { isHtmlElement } from 'react-router-dom/dist/dom';
-// import {AiOutlineHeart} from 'react-icons/fa';
-import {FaHeart,FaRegHeart} from 'react-icons/fa';
-import './Home.css'
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import './Home.css';
 
+function CategoryPage() {
+    const navigate = useNavigate();
+    const param = useParams();
 
-function CategoryPage(){
-
-    const navigate=useNavigate();
-    const param=useParams();
-    // console.log(param);
-
-    const [cproducts,setcproducts]=useState([]);
-    const [products,setproducts]=useState([]);
-    const [search,setsearch]=useState('');
-    const [issearch,setissearch]=useState(false);
-    const [ refresh,setrefresh ] = useState(false);
+    const [cproducts, setcproducts] = useState([]);
+    const [products, setproducts] = useState([]);
+    const [search, setsearch] = useState('');
+    const [issearch, setissearch] = useState(false);
+    const [refresh, setrefresh] = useState(false);
     const [likedproducts, setlikedproducts] = useState([]);
- 
 
-    // useEffect(()=>{
-    //     // console.log(localStorage.getItem('token'))
-    //     if(!localStorage.getItem('token')){
-    //         navigate('/login')
-    //     }
-    // },[])
-
-    useEffect(()=>{
-        const url='http://localhost:4000/get-products?catName=' + param.catName;
+    useEffect(() => {
+        const url = 'https://collegekart-ltme.onrender.com/get-products?catName=' + param.catName;
         axios.get(url)
-        .then((res)=>{
-            // console.log(res);
-            if(res.data.products){
-                setproducts(res.data.products);
-                // setcproducts(res.data.products);
-            }
-        })
-        .catch((err)=>{
-            // console.log(err)
-            alert('err is here')
-        })
-        const url2 = 'http://localhost:4000/liked-products';
-        let data= { userId: localStorage.getItem('userId')}
-        axios.post(url2,data)
-        .then((res) => {
-            if (res.data.products) {
-                setlikedproducts(res.data.products);
-            }
-        })
-        .catch((err) => {
-            alert('Error fetching liked-products');
-        });
-        
-    },[param,refresh])
+            .then((res) => {
+                if (res.data.products) {
+                    setproducts(res.data.products);
+                }
+            })
+            .catch(() => {
+                alert('Error fetching products');
+            });
 
+        const url2 = 'https://collegekart-ltme.onrender.com/liked-products';
+        let data = { userId: localStorage.getItem('userId') };
+        axios.post(url2, data)
+            .then((res) => {
+                if (res.data.products) {
+                    setlikedproducts(res.data.products);
+                }
+            })
+            .catch(() => {
+                alert('Error fetching liked-products');
+            });
+    }, [param, refresh]);
 
-    const handlesearch = (value)=>{
-        // console.log('hh',value);
+    const handlesearch = (value) => {
         setsearch(value);
-    }
-    const handleClick=()=>{
-        const url = 'http://localhost:4000/search?search=' + search + '&loc=' + localStorage.getItem('userLoc');
+    };
+
+    const handleClick = () => {
+        const url = 'https://collegekart-ltme.onrender.com/search?search=' + search + '&loc=' + localStorage.getItem('userLoc');
         axios.get(url)
-        .then((res)=>{
-            // console.log(res.data)
-            setcproducts(res.data.products);
-            setissearch(true);
-        })
-        .catch((err)=>{
-            // console.log(err)
-            alert('err is here')
-        })
+            .then((res) => {
+                setcproducts(res.data.products);
+                setissearch(true);
+            })
+            .catch(() => {
+                alert('Error during search');
+            });
+    };
 
+    const handleCategory = (value) => {
+        let filteredProducts = products.filter((item) => item.category.toLowerCase() === value.toLowerCase());
+        setcproducts(filteredProducts);
+    };
 
-        //HERE WE WERE SEARCHING LOCALLY
-        // console.log('products',products);
-        // let filteredProducts=products.filter((item)=>{
-        //     if( item.pname.toLowerCase().includes(search.toLowerCase()) 
-        //         || item.pdesc.toLowerCase().includes(search.toLowerCase()) || 
-        //         item.category.toLowerCase().includes(search.toLowerCase()))
-            
-        //     {
-        //         return item;
-        //     }
-        // });
-        // setcproducts(filteredProducts)
-
-    }
-
-    const handleCategory=(value)=>{
-        // console.log(value,"v");
-        let filteredProducts=products.filter((item)=>{ 
-            if(item.category.toLowerCase()==(value.toLowerCase()))       
-            {
-                return item;
-            }
-        });
-        // console.log(products);
-        setcproducts(filteredProducts)
-    }
-
-    const handleLike = (productId,e)=>{
-        // console.log('userId','producId',productId)
+    const handleLike = (productId, e) => {
         e.stopPropagation();
-        let userId=localStorage.getItem('userId')  
-        const url='http://localhost:4000/like-product';
-        const data={userId,productId}
-        axios.post(url,data)
-        .then((res)=>{
-            alert('Liked product')
-            setrefresh(!refresh)
-        })
-        .catch((err)=>{
-            console.log(err)
-            alert('err is here')
-        })
-    }
+        let userId = localStorage.getItem('userId');
+        const url = 'https://collegekart-ltme.onrender.com/like-product';
+        const data = { userId, productId };
+        axios.post(url, data)
+            .then(() => {
+                alert('Liked product');
+                setrefresh(!refresh);
+            })
+            .catch(() => {
+                alert('Error liking product');
+            });
+    };
 
     const handleDisLike = (productId, e) => {
         e.stopPropagation();
@@ -130,81 +87,119 @@ function CategoryPage(){
             return;
         }
 
-        const url = 'http://localhost:4000/dislike-product';
-        const data = {userId, productId};
+        const url = 'https://collegekart-ltme.onrender.com/dislike-product';
+        const data = { userId, productId };
         axios.post(url, data)
-            .then((res) => {
+            .then(() => {
                 alert('Removed from favourites');
-                setrefresh(!refresh)
+                setrefresh(!refresh);
             })
-            .catch((err) => {
-                console.log(err);
-                alert('Error liking product');
+            .catch(() => {
+                alert('Error disliking product');
             });
-    }
+    };
 
-    const handleProduct=(id)=>{
-        navigate('/product/'+ id)
-    }
+    const handleProduct = (id) => {
+        navigate('/product/' + id);
+    };
 
     return (
         <div>
-            <Header search={search} handlesearch={handlesearch} handleClick={handleClick}/>
-            <Categories handleCategory={handleCategory}/>
-            {/* <h2>My products:</h2> */}
-            {issearch && cproducts && <h5>Search Results
-                    <button className="clear-btn" onClick={()=>setissearch(false)}>Clear</button>
-                </h5>}
-            
-            {issearch && cproducts && cproducts.length==0 && <h5>NO Result Found</h5>}
-            {issearch &&  <div className="d-flex justify-content-center flex-wrap">
-            {cproducts && cproducts.length >0 &&
-                cproducts.map((item,index)=>{
-                    // console.log('hello')
-                    return (
-                        <div onClick={()=>handleProduct(item._id)} key={item._id} className="card m-3">
-                            {/* <AiOutlineHeart/> */}
-                            <div onClick={()=>handleLike(item._id)} classname="icon-con">
-                                <FaRegHeart className="icons"/>
-                            </div>
-                            <img width="250px" height="170px" src={'http://localhost:4000/'+item.pimage}/>
-                            <h3 className="m-2 price-text">Rs. {item.price} /-</h3> 
-                            <p className="m-2">{item.pname} | {item.category} </p>
-                            
-                            <p className="m-2 text-success">{item.pdesc}</p>
-                            
+            <Header search={search} handlesearch={handlesearch} handleClick={handleClick} />
+            <Categories handleCategory={handleCategory} />
+            <div className="container py-5">
+                {issearch && (
+                    <div className="text-center">
+                        <h4 className="mb-5"><strong>Search Results</strong></h4>
+                        <button className="clear-btn" onClick={() => setissearch(false)}>Clear</button>
+                        <div className="row">
+                            {cproducts.length > 0 ? (
+                                cproducts.map((item) => (
+                                    <div onClick={() => handleProduct(item._id)} key={item._id} className="col-lg-4 col-md-6 mb-4">
+                                        <div className="card">
+                                            <div className="bg-image hover-zoom ripple ripple-surface ripple-surface-light" data-mdb-ripple-color="light">
+                                                <img src={`https://collegekart-ltme.onrender.com/${item.pimage}`} className="w-100" alt={item.pname} />
+                                                <div className="mask">
+                                                    <div className="d-flex justify-content-start align-items-end h-100">
+                                                        <h5>
+                                                            <span className={`badge ms-2 ${item.isNew ? 'bg-primary' : ''}`}>{item.isNew ? 'New' : ''}</span>
+                                                            <span className={`badge ms-2 ${item.isEco ? 'bg-success' : ''}`}>{item.isEco ? 'Eco' : ''}</span>
+                                                            <span className={`badge ms-2 ${item.isDiscount ? 'bg-danger' : ''}`}>{item.isDiscount ? `-${item.discount}%` : ''}</span>
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <h5 className="card-title mb-3">{item.pname}</h5>
+                                                <p className="card-text">{item.category}</p>
+                                                <h6 className="mb-3">
+                                                    {item.isDiscount ? (
+                                                        <>
+                                                            <s>₹{item.price}</s>
+                                                            <strong className="ms-2 text-danger">₹{item.discountedPrice}</strong>
+                                                        </>
+                                                    ) : (
+                                                        `₹${item.price}`
+                                                    )}
+                                                </h6>
+                                                <div onClick={(e) => likedproducts.find((likedItem) => likedItem._id === item._id) ? handleDisLike(item._id, e) : handleLike(item._id, e)} className="icon-con">
+                                                    {likedproducts.find((likedItem) => likedItem._id === item._id) ? <FaHeart className="icons red-icons" /> : <FaRegHeart className="icons" />}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <h5>No Results Found</h5>
+                            )}
                         </div>
-                    )
-                })
-            }
-            </div>}
-            {/* <h5>all results</h5> */}
-           {!issearch && <div className="d-flex justify-content-center flex-wrap">
-                {products && products.length >0 &&
-                    products.map((item,index)=>{
-                        // console.log('hello')
-                        return (
-                            <div  onClick={()=>handleProduct(item._id)} key={item._id} className="card m-3">
-                                <div className="icon-con">
-                                {
-                                       likedproducts.find((likedItem)=>likedItem._id===item._id)?
-                                       <FaRegHeart onClick={(e) => handleDisLike(item._id, e)} className="red-icons"/>: 
-                                       <FaRegHeart onClick={(e) => handleLike(item._id, e)}  className="icons"/>
-                                    }
+                    </div>
+                )}
+                {!issearch && (
+                    <div className="text-center">
+                        <h4 className="mb-5"><strong>All Products</strong></h4>
+                        <div className="row">
+                            {products.map((item) => (
+                                <div onClick={() => handleProduct(item._id)} key={item._id} className="col-lg-4 col-md-6 mb-4">
+                                    <div className="card">
+                                        <div className="bg-image hover-zoom ripple ripple-surface ripple-surface-light" data-mdb-ripple-color="light">
+                                            <img src={`https://collegekart-ltme.onrender.com/${item.pimage}`} className="w-100" alt={item.pname} />
+                                            <div className="mask">
+                                                <div className="d-flex justify-content-start align-items-end h-100">
+                                                    <h5>
+                                                        <span className={`badge ms-2 ${item.isNew ? 'bg-primary' : ''}`}>{item.isNew ? 'New' : ''}</span>
+                                                        <span className={`badge ms-2 ${item.isEco ? 'bg-success' : ''}`}>{item.isEco ? 'Eco' : ''}</span>
+                                                        <span className={`badge ms-2 ${item.isDiscount ? 'bg-danger' : ''}`}>{item.isDiscount ? `-${item.discount}%` : ''}</span>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="card-body">
+                                            <h5 className="card-title mb-3">{item.pname}</h5>
+                                            <p className="card-text">{item.category}</p>
+                                            <h6 className="mb-3">
+                                                {item.isDiscount ? (
+                                                    <>
+                                                        <s>₹{item.price}</s>
+                                                        <strong className="ms-2 text-danger">₹{item.discountedPrice}</strong>
+                                                    </>
+                                                ) : (
+                                                    `₹${item.price}`
+                                                )}
+                                            </h6>
+                                            <div onClick={(e) => likedproducts.find((likedItem) => likedItem._id === item._id) ? handleDisLike(item._id, e) : handleLike(item._id, e)} className="icon-con">
+                                                {likedproducts.find((likedItem) => likedItem._id === item._id) ? <FaHeart className="icons red-icons" /> : <FaRegHeart className="icons" />}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <img width="250px" height="170px" src={'http://localhost:4000/'+item.pimage}/>
-                                <h3 className="m-2 price-text">Rs. {item.price} /-</h3>
-                                <p className="m-2">{item.pname} | {item.category} </p>
-                                 
-                                <p className="m-2 text-success">{item.pdesc}</p>
-                                
-                            </div>
-                        )
-                    })
-                }
-            </div>}
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
-    )
+    );
 }
 
 export default CategoryPage;

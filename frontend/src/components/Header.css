@@ -96,3 +96,11 @@
         background : #002f34;
         border-radius: 7px;
 }
+
+.dropdown-menu {
+    right: 0;
+}
+
+.nav-item{
+    margin-right: 10px;
+} 

@@ -28,7 +28,7 @@ function EditProduct(){
 
     useEffect(()=>{
         console.log(p)
-        const url='http://localhost:4000/get-product/'+p.productid;
+        const url='https://collegekart-ltme.onrender.com/get-product/'+p.productid;
         axios.get(url)
         .then((res)=>{
             console.log(res)
@@ -63,7 +63,7 @@ function EditProduct(){
             formData.append('pimage2',pimage2);
             formData.append('userId',localStorage.getItem('userId'));
 
-            const url='http://localhost:4000/edit-product';
+            const url='https://collegekart-ltme.onrender.com/edit-product';
             axios.post(url,formData)
             .then((res)=>{
                 console.log(res)
@@ -129,7 +129,7 @@ function EditProduct(){
                         setpimage(e.target.files[0])
                     }}
                     />
-                    <img src={'http://localhost:4000/'+poldimage } width={100} height={50} />
+                    <img src={'https://collegekart-ltme.onrender.com/'+poldimage } width={100} height={50} />
                     <br/>
                 <label>Product Second Image:</label>
                 <input style={{ width:'50%'}} className="form-control" type="file"
@@ -137,7 +137,7 @@ function EditProduct(){
                         setpimage2(e.target.files[0])
                     }}
                 />
-                <img src={'http://localhost:4000/'+poldimage2 } width={100} height={50} />
+                <img src={'https://collegekart-ltme.onrender.com/'+poldimage2 } width={100} height={50} />
                 <br></br>
                 <button onClick={handleApi} className="btn btn-primary mt-3">SUBMIT</button>
             </div>

@@ -8,7 +8,7 @@ function MyProfile() {
     const [user,setuser]=useState({});
 
     useEffect(() => {
-        let url = 'http://localhost:4000/my-profile/'+localStorage.getItem('userId')
+        let url = 'https://collegekart-ltme.onrender.com/my-profile/'+localStorage.getItem('userId')
         axios.get(url)
             .then((res) => {
                 console.log(res.data);

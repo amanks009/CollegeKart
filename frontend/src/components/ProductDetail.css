@@ -1,0 +1,4 @@
+.carousel-image {
+    max-height: 400px;
+    object-fit: contain; /* Ensures the entire image is visible within the container */
+}

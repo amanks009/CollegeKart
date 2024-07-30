@@ -25,7 +25,7 @@ function LikedProducts(){
     // },[])
 
     useEffect(()=>{
-        const url='http://localhost:4000/liked-products';
+        const url='https://collegekart-ltme.onrender.com/liked-products';
         let data={ userId: localStorage.getItem('userId')}
         axios.post(url,data)
         .then((res)=>{
@@ -71,7 +71,7 @@ function LikedProducts(){
             return;
         }
 
-        const url = 'http://localhost:4000/dislike-product';
+        const url = 'https://collegekart-ltme.onrender.com/dislike-product';
         const data = {userId, productId};
         axios.post(url, data)
             .then((res) => {
@@ -99,7 +99,7 @@ function LikedProducts(){
     const handleLike = (productId)=>{
         // console.log('userId','producId',productId)
         let userId=localStorage.getItem('userId')  
-        const url='http://localhost:4000/like-product';
+        const url='https://collegekart-ltme.onrender.com/like-product';
         const data={userId,productId}
         axios.post(url,data)
         .then((res)=>{
@@ -127,7 +127,7 @@ function LikedProducts(){
                             <div onClick={()=>handleLike(item._id)} classname="icon-con">
                                 <FaRegHeart className="icons"/>
                             </div>
-                            <img width="250px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
+                            <img width="250px" height="200px" src={'https://collegekart-ltme.onrender.com/'+item.pimage}/>
                             <p className="m-2">{item.pname} | {item.category} </p>
                             <h3 className="m-2 text-danger">{item.price}</h3> 
                             <p className="m-2 text-success">{item.pdesc}</p>
@@ -147,7 +147,7 @@ function LikedProducts(){
                                 <div onClick={()=>handleLike(item._id)} className="icon-con">
                                     <FaRegHeart className="red-icons"/>
                                 </div>
-                                <img width="200px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
+                                <img width="200px" height="200px" src={'https://collegekart-ltme.onrender.com/'+item.pimage}/>
                                 <p className="m-2">{item.pname} | {item.category} </p>
                                 <h3 className="m-2 text-danger">{item.price}</h3> 
                                 <p className="m-2 text-success">{item.pdesc}</p>
