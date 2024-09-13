@@ -127,10 +127,12 @@ module.exports.myProfileById=(req,res)=>{
 
   module.exports.likedProducts=(req,res) => {
     Users.findOne({ _id: req.body.userId }).populate('likedProducts')
+
     .then((result)=>{
       res.send({message:"Success" , products:result.likedProducts})
     })
     .catch((err)=>{
+      console.log(err);
       res.send({message:'Server error'})
     })
   }
