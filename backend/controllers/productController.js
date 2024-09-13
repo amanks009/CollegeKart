@@ -104,7 +104,7 @@ module.exports.addProduct=(req,res)=>{
     } });
     product.save()
     .then(()=>{
-      res.send({message:'Product Added Successfully!!!'})
+      res.send({message:'saved success..'})
     })
     .catch(()=>{
       res.send({message:'Serever error'})

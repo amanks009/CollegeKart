@@ -4,7 +4,6 @@ import axios from 'axios';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import Header from './Header';
 import Categories from './Categories';
-import Shimmer from './Shimmer';
 import './Home.css';
 
 function Home() {
@@ -15,18 +14,11 @@ function Home() {
     const [search, setsearch] = useState('');
     const [refresh, setrefresh] = useState(false);
     const [issearch, setissearch] = useState(false);
-    const [loading, setloading] = useState(true);
 
     useEffect(() => {
         axios.get('https://collegekart-ltme.onrender.com/get-products')
-            .then(res => {
-                setproducts(res.data.products);
-                setloading(false);
-            })
-            .catch(() => {
-                alert('Error fetching products');
-                setloading(false);
-            });
+            .then(res => setproducts(res.data.products))
+            .catch(() => alert('Error fetching products'));
 
         axios.post('https://collegekart-ltme.onrender.com/liked-products', { userId: localStorage.getItem('userId') })
             .then(res => {console.log("==",res.data)})
@@ -84,15 +76,7 @@ function Home() {
         <div className="home-container">
             <Header search={search} handlesearch={handlesearch} handleClick={handleClick} />
             <Categories handleCategory={handleCategory} />
-            {loading ? (
-                <div className="row">
-                    {[...Array(6)].map((_, index) => (
-                        <div key={index} className="col-lg-4 col-md-6 mb-4">
-                            <Shimmer />
-                        </div>
-                    ))}
-                </div>
-            ) : issearch ? (
+            {issearch && (
                 <div className="text-center container py-5">
                     <h4 className="mt-4 mb-5"><strong>Search Results</strong></h4>
                     <button className="clear-btn" onClick={() => setissearch(false)}>Clear</button>
@@ -134,7 +118,8 @@ function Home() {
                         )) : <h5>No Results Found</h5>}
                     </div>
                 </div>
-            ) : (
+            )}
+            {!issearch && (
                 <div className="text-center container py-5">
                     <div className="row">
                         {products.map(item => (
