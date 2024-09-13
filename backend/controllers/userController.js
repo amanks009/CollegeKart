@@ -56,7 +56,7 @@ module.exports.signup=async (req,res)=>{
       }
       const user = new Users({ username: username, password:encrypt_password, email, mobile });
       user.save().then(()=>{
-        res.send({message:'saved success..'})
+        res.send({message:'Account Created Successfully!!!'})
       })
       .catch(()=>{
         res.send({message:'Serever error'})

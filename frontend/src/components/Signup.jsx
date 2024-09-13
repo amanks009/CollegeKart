@@ -60,9 +60,6 @@ function Signup() {
                   height="80"
                   alt="BootstrapBrain Logo"
                 />
-                <p className="mb-0">
-                  Not a member yet? <Link to="/signup" className="link-secondary text-decoration-none">Register now</Link>
-                </p>
               </div>
             </div>
             <div className="col-12 col-md-6 bsb-tpl-bg-lotion">
