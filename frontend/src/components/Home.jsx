@@ -29,8 +29,10 @@ function Home() {
             });
 
         axios.post('https://collegekart-ltme.onrender.com/liked-products', { userId: localStorage.getItem('userId') })
-            .then(res => setlikedproducts(res.data.products))
+            .then(res => {console.log("==",res.data)})
+        // setlikedproducts(res.data.products))
             .catch(() => alert('Error fetching liked-products'));
+
     }, [refresh]);
 
     const handlesearch = value => setsearch(value);
@@ -163,6 +165,7 @@ function Home() {
                                                 `$${item.price}`
                                             )}
                                         </h6>
+                                        {/* {console.log("====",likedproducts)} */}
                                         <div onClick={e => likedproducts.find(likedItem => likedItem._id === item._id) ? handleDisLike(item._id, e) : handleLike(item._id, e)} className="icon-con">
                                             {likedproducts.find(likedItem => likedItem._id === item._id) ? <FaHeart className="icons red-icons" /> : <FaRegHeart className="icons" />}
                                         </div>

@@ -20,7 +20,7 @@ module.exports.likeProducts=(req,res)=>{
       res.send({message: 'like success'})
     })
     .catch((err)=>{
-      // console.log(err)
+      console.log(err)
       res.send({message:'server err'})
     })
 
