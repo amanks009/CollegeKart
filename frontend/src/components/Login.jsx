@@ -97,7 +97,7 @@ function Login() {
             </div>
             <div className="col-sm-6 px-0 d-none d-sm-block">
               <img
-                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp"
+                src="https://img.freepik.com/free-vector/online-shopping-concept-landing-page_23-2148203334.jpg?t=st=1730824950~exp=1730828550~hmac=73a33775a5be3142c5cf2e3d77d4f5b567637eac5684382b897d990a7ffad2b2&w=740"
                 alt="Login image"
                 className="w-100 vh-100"
                 style={{ objectFit: 'cover', objectPosition: 'left' }}

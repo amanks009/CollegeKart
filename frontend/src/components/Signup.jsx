@@ -53,12 +53,10 @@ function Signup() {
               <div className="d-flex flex-column justify-content-between h-100 p-3 p-md-4 p-xl-5">
                 <h3 className="m-0">Welcome!</h3>
                 <img
-                  className="img-fluid rounded mx-auto my-4"
+                  className="img-fluid rounded mx-auto my-4 w-100 vh-100"
                   loading="lazy"
                   // src="./assets/img/bsb-logo.svg"
-                  src="https://th.bing.com/th/id/OIP.qy7Pdd5DuCN5TRwteEzsVgHaFG?rs=1&pid=ImgDetMain"
-                  width="245"
-                  height="80"
+                  src="https://img.freepik.com/free-vector/online-shopping-concept-landing-page_23-2148203334.jpg?t=st=1730824950~exp=1730828550~hmac=73a33775a5be3142c5cf2e3d77d4f5b567637eac5684382b897d990a7ffad2b2&w=740"
                   alt="BootstrapBrain Logo"
                 />
                 <p className="mb-0">
