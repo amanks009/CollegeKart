@@ -32,7 +32,7 @@ function AddProduct() {
             formData.append('pimage2', pimage2);
             formData.append('userId', localStorage.getItem('userId'));
 
-            const url = 'http://localhost:4000/add-product';
+            const url = 'https://collegekart-ltme.onrender.com/add-product';
             axios.post(url, formData)
                 .then((res) => {
                     console.log(res);

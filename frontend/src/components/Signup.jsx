@@ -55,7 +55,8 @@ function Signup() {
                 <img
                   className="img-fluid rounded mx-auto my-4"
                   loading="lazy"
-                  src="./assets/img/bsb-logo.svg"
+                  // src="./assets/img/bsb-logo.svg"
+                  src="https://th.bing.com/th/id/OIP.qy7Pdd5DuCN5TRwteEzsVgHaFG?rs=1&pid=ImgDetMain"
                   width="245"
                   height="80"
                   alt="BootstrapBrain Logo"

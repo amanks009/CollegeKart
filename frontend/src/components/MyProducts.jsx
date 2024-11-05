@@ -26,7 +26,7 @@ function MyProducts(){
     // },[])
 
     useEffect(()=>{
-        const url='http://localhost:4000/my-products';
+        const url='https://collegekart-ltme.onrender.com/my-products';
         let data={ userId: localStorage.getItem('userId')}
         axios.post(url,data)
         .then((res)=>{
@@ -78,7 +78,7 @@ function MyProducts(){
     const handleLike = (productId)=>{
         // console.log('userId','producId',productId)
         let userId=localStorage.getItem('userId')  
-        const url='http://localhost:4000/like-product';
+        const url='https://collegekart-ltme.onrender.com/like-product';
         const data={userId,productId}
         axios.post(url,data)
         .then((res)=>{
@@ -96,7 +96,7 @@ function MyProducts(){
             alert('Login First')
             return ;
         }
-        const url='http://localhost:4000/delete-product';
+        const url='https://collegekart-ltme.onrender.com/delete-product';
         const data={
             pid,
             userId : localStorage.getItem('userId')
@@ -128,7 +128,7 @@ function MyProducts(){
                             <div onClick={()=>handleLike(item._id)} classname="icon-con">
                                 <FaRegHeart className="icons"/>
                             </div>
-                            <img width="200px" height="200px" src={'http://localhost:4000/'+item.pimage}/>
+                            <img width="200px" height="200px" src={'https://collegekart-ltme.onrender.com'+item.pimage}/>
                             <p className="m-2">{item.pname} | {item.category} </p>
                             <h3 className="m-2 text-danger">{item.price}</h3> 
                             <p className="m-2 text-success">{item.pdesc}</p>
